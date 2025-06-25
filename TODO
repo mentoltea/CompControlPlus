@@ -1,0 +1,11 @@
+regular tasks +
+screenshots +
+logging (LOG, INFO, WARN, ERROR) +
+command parsing system +
+keyboard
+message handling
+
+----
+
+execute on start | ...
+execute after | ...
