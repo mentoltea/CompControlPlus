@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-from tasks import task
-from typing import Any
+from typing import Any, Callable
 
 def sort_expressions(expr: list[Expression]) -> tuple[ tuple, dict[str, Any] ]:
     args = []
@@ -9,8 +8,9 @@ def sort_expressions(expr: list[Expression]) -> tuple[ tuple, dict[str, Any] ]:
     
     for e in expr:
         value = e.get()
-        if e.name != None:
-            kwargs[e.name] = value
+        name = e.getname()
+        if name != None:
+            kwargs[name] = value
         else:
             args.append(value)
     
@@ -25,6 +25,9 @@ class Expression:
     def get(self):
         return self.value
 
+    def getname(self) -> str | None:
+        return self.name
+
 class ExclamationExpression(Expression):
     """ !(...) """
     def __init__(self, evalstring):
@@ -32,6 +35,9 @@ class ExclamationExpression(Expression):
     
     def get(self):
         return eval(self.evalstring)
+    
+    def getname(self) -> str | None:
+        return None
 
 class CommandExpression(Expression):
     def __init__(self, name: str, exprs: list[Expression]):
@@ -47,24 +53,68 @@ class CommandExpression(Expression):
         else:
             err = f"No command named {self.name} found"
             raise Exception( err )
-            
+    
+    def getname(self) -> str | None:
+        return None
+
+class CommandUsageError(Exception):
+    def __init__(self, message: str) -> None:
+        self.message = message
+        super().__init__(message)
+    
+    def __str__(self) -> str:
+        return self.message
+        
+
 commands: dict[str, Command] = {}
 class Command:
     """ /name arg1 arg2 ... argn """
     def __init__(
         self,
         name: str,
-        target: task.Callable,
-        descr: str = "Empty description"
+        target: Callable,
+        descr: str = "Empty description",
+        usage: str = "Usage not provided"
     ):
         self.name = name
         self.descr = descr
+        self.usage = usage
         self.target = target
     
     def __call__(self, expr: list[Expression]) -> Expression:
         args, kwargs = sort_expressions(expr)
-        return Expression(self.target(*args, **kwargs))
+        try:
+            result = self.target(*args, **kwargs)
+            return Expression(result)
+        except CommandUsageError as e:
+            text = ( 
+                f"{str(e)}" + "\n"
+                + f"Command: {self.name}" + "\n"
+                + "Usage:" + "\n"
+                + f"{self.usage}" + "\n" 
+            )
+
+            
+            raise CommandUsageError(text)
+            
+
+def NewCommand(name: str, descr: str = "Empty description", usage: str = "Usage not provided"):
+    class CommandDecorator:
+        def __init__(
+            self, 
+            target: Callable
+        ):     
+            self.target = target
+            com = Command(name, target, descr, usage)
+            
+            commands[name] = com
+        
+        def __call__(self, *args, **kwargs):
+            return self.target(*args, **kwargs)
     
+    return CommandDecorator
+        
+
 
 def parse_query_to_blocks(query: str) -> list[ tuple[str,str] ]:
     blocks: list[tuple[str, str]] = []
@@ -170,7 +220,8 @@ def parse_query_to_blocks(query: str) -> list[ tuple[str,str] ]:
                     continue
     
     if len(blocks)==0:
-        raise Exception(f"No blocks was found in command. Check for closure of {nowdoing}")          
+        err = f"No blocks was found in command. Check for closure of {nowdoing}"
+        raise Exception( err )          
     
     valid = False
     if blocks[0][1] == '/':
@@ -347,7 +398,8 @@ def evaluate_array_blocks(blocks: list[tuple[str,str]]) -> Expression:
                 exprs.append( Expression(value) )
             
             case _:
-                raise Exception(f"Unknown block type: {block_type}")
+                err = f"Unknown block type: {block_type}"
+                raise Exception(err)
     
     values: list[Any] = []
     for e in exprs:
@@ -414,27 +466,11 @@ def evaluate_blocks(blocks: list[tuple[str,str]]) -> Expression:
                     exprs.append( Expression(value) )
                 
                 case _:
-                    raise Exception(f"Unknown block type: {block_type}")
+                    err = f"Unknown block type: {block_type}"
+                    raise Exception( err )
         
         
         return CommandExpression(command_name, exprs)    
             
     else:
         raise Exception("Unknown expression type")
-
-
-def func(*args, **kwargs):
-    print(*args)
-
-cA = Command("A", func)
-commands["A"] = cA
-
-cB = Command("B", func)
-commands["B"] = cB
-
-
-example_query = '/A "1 []" [1, !(str(1) + "1"), { /B }]'
-
-blocks = parse_query_to_blocks(example_query)
-result = evaluate_blocks(blocks)
-print(result.get())

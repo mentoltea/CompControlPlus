@@ -1,0 +1,7 @@
+*
+!.gitignore
+!tasks
+!*.py
+!requirements.txt
+!TODO
+!commands
