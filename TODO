@@ -2,6 +2,23 @@ regular tasks +
 screenshots +
 logging (LOG, INFO, WARN, ERROR) +
 command parsing system +
+Basic commands:
+    str
+    int
+    float
+    help
+Functional commands:
+    screen [poll]
+    log [send save clear]
+    cmd
+    mouse [set]
+    send [photo video]
+    save ["filepath"]
+Special commands:
+    delay interval "command"
+    regular inrterval "command"
+    alias "command" "name"
+Alias command system
 keyboard
 message handling
 
