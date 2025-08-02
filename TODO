@@ -2,11 +2,14 @@ regular tasks +
 screenshots +
 logging (LOG, INFO, WARN, ERROR) +
 command parsing system +
-Basic commands:
-    str
-    int
-    float
-    help
+Basic commands: +
+    str +
+    int +
+    float +
+    help +
+Global state +
+CMD cursor class
+State modes (CMD mode)
 Functional commands:
     screen [poll]
     log [send save clear]

@@ -40,6 +40,7 @@ class ExclamationExpression(Expression):
         return None
 
 class CommandExpression(Expression):
+    """ /com ... """
     def __init__(self, name: str, exprs: list[Expression]):
         self.name = name
         self.exprs = exprs
@@ -99,6 +100,8 @@ class Command:
             
 
 def NewCommand(name: str, descr: str = "Empty description", usage: str = "Usage not provided"):
+    if name[0]=='/':
+        name = name[1:]
     class CommandDecorator:
         def __init__(
             self, 

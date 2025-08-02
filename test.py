@@ -1,13 +1,14 @@
-import regular_task
-import time
-import inspect
-from typing import Any
+import command
 
+import basic_commands
+import state_commands
+import cmd_commands
 
-def func(a: int|None, b, c="123", d=None, **kwargs):
-    print(time.time())
-    
-sign = inspect.signature(func)
-for param in sign.parameters.values():
-    print(f"Parameter: {param.name}")
-    print(f"\tType: {param.annotation}")
+state_commands.state.state.anewattr = 1  # pyright: ignore[reportAttributeAccessIssue]
+print(state_commands.state.state.__dict__)
+
+query = '/reset! YES'
+res = command.evaluate_blocks(command.parse_query_to_blocks(query))
+print(res.get())
+
+print(state_commands.state.state.__dict__)

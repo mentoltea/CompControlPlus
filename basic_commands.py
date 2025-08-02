@@ -2,6 +2,31 @@ import command
 from command import Expression, CommandUsageError, NewCommand
 from typing import Any
 
+@NewCommand(
+    "!", 
+    "Eval", 
+    "/! arg"
+)
+def ExplicitEval(*args, **kwargs) -> Any:
+    if len(args) != 1:
+        raise CommandUsageError("Needs exactly 1 argument to eval")
+    estr = args[0]
+    res = eval(estr)
+    return res
+
+@NewCommand(
+    "!!", 
+    "Exec", 
+    "/!! arg"
+)
+def ExplicitExec(*args, **kwargs) -> Any:
+    if len(args) < 1:
+        raise CommandUsageError("Needs at least 1 argument to eval")
+    estr = ""
+    for arg in args:
+        estr += str(arg) + "\n"
+    res = exec(estr)
+    return res
 
 @NewCommand(
     "+", 
@@ -43,14 +68,20 @@ def SubtractArguments(*args, **kwargs) -> Any:
     
 @NewCommand(
     "?", "Returns the description of given command", 
+    "/?" + "\n" +
     "/? CommandName"
 )
 def DescribeCommand(*args, **kwargs) -> str:
+    res = ""
+        
     if (len(args) == 0):
-        raise CommandUsageError("Needs at least 1 command to describe")
+        res = "Command list:"
+        for name in command.commands:
+            cmd = command.commands[name]
+            res += f"\n{cmd.name}"
+        return res
     
     name = args[0]
-    res = ""
     if name in command.commands:
         cmd = command.commands[name]
         res = ( ""
@@ -65,6 +96,39 @@ def DescribeCommand(*args, **kwargs) -> str:
     
     return res
 
-query = "/? ?"
-res = command.evaluate_blocks(command.parse_query_to_blocks(query))
-print(res.get())
+@NewCommand(
+    "/str", "Tries to convert argument to string", 
+    "/str arg"
+)
+def Stringify(*args, **kwargs) -> str:
+    if (len(args) != 1):
+        raise CommandUsageError("Needs exactly 1 arguments to convert")
+    
+    arg = args[0]
+    res = str(arg)
+    return res
+
+@NewCommand(
+    "/int", "Tries to convert argument to int", 
+    "/int arg"
+)
+def Intify(*args, **kwargs) -> int:
+    if (len(args) != 1):
+        raise CommandUsageError("Needs exactly 1 arguments to convert")
+    
+    arg = args[0]
+    res = int(arg)
+    return res
+
+@NewCommand(
+    "/float", "Tries to convert argument to float", 
+    "/float arg"
+)
+def Floatify(*args, **kwargs) -> float:
+    if (len(args) != 1):
+        raise CommandUsageError("Needs exactly 1 arguments to convert")
+    
+    arg = args[0]
+    res = float(arg)
+    return res
+    
