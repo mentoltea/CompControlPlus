@@ -1,5 +1,5 @@
-import command
-from command import Expression, CommandUsageError, NewCommand
+from . import command
+from .command import Expression, CommandUsageError, NewCommand
 from typing import Any
 
 @NewCommand(
@@ -24,7 +24,13 @@ def ExplicitExec(*args, **kwargs) -> Any:
         raise CommandUsageError("Needs at least 1 argument to eval")
     estr = ""
     for arg in args:
-        estr += str(arg) + "\n"
+        if (arg == ';'): estr +=  "\n"
+        elif (arg[-1] == ';'):
+            arg = arg[0:len(arg)-1]
+            estr += str(arg) + "\n"
+        else: estr += str(arg) + " "
+        
+    print(estr)
     res = exec(estr)
     return res
 

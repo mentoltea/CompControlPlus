@@ -1,7 +1,7 @@
-import utility
+from core.functional import ensure_dir_existance
 import time
 
-COMMON_DIR = "logs/"
+COMMON_DIR = "data/logs/"
 
 LOG_DIR = "log/"
 INFO_DIR = "info/"
@@ -17,7 +17,7 @@ def format_line(t: time.struct_time, text: str) -> str:
     return time.strftime("Day %d %H:%M:%S: ", t) + text + "\n"
 
 def LOG(text: str):
-    utility.ensure_dir_existance(COMMON_DIR + LOG_DIR)
+    ensure_dir_existance(COMMON_DIR + LOG_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
@@ -30,7 +30,7 @@ def LOG(text: str):
     fd.close()
 
 def INFO(text: str):
-    utility.ensure_dir_existance(COMMON_DIR + INFO_DIR)
+    ensure_dir_existance(COMMON_DIR + INFO_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
@@ -43,7 +43,7 @@ def INFO(text: str):
     fd.close()
 
 def WARN(text: str):
-    utility.ensure_dir_existance(COMMON_DIR + WARN_DIR)
+    ensure_dir_existance(COMMON_DIR + WARN_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
@@ -56,7 +56,7 @@ def WARN(text: str):
     fd.close()
     
 def ERROR(text: str):
-    utility.ensure_dir_existance(COMMON_DIR + ERROR_DIR)
+    ensure_dir_existance(COMMON_DIR + ERROR_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
