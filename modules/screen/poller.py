@@ -28,7 +28,7 @@ def poller_function(tid: int, polltime: float, callback: Callable[ [PIL.Image.Im
         time.sleep(common.DT)
 
 
-def start_polling(polltime: float, callback: Callable[ [PIL.Image.Image], None] | None = None):
+def start_polling_async(polltime: float, callback: Callable[ [PIL.Image.Image], None] | None = None):
     SS = state_glue.GetLocalState()
     tid = SS.new_tid()
     task.ThreadTask(poller_function, tid, polltime, callback)()

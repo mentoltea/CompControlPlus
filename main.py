@@ -1,4 +1,14 @@
-import os
-from tasks import task
+from core import state
+from modules import screen, logger
+from modules import telegram
 
-print( os.getcwd() )
+import time
+
+telegram.poller.start_polling_async()
+
+time.sleep(1)
+
+# screen.poller.start_polling_async(2, telegram.screen_glue.send_screen)
+
+while 1:
+    input('Waiting')
