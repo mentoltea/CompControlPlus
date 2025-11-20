@@ -1,4 +1,4 @@
-from . import common
+from . import common, send, persistent
 import requests
 import telebot
 import time
@@ -17,7 +17,7 @@ def poll():
         text = f"--- Iteration {iterations} ---"
         logger.LOG(text)
         if (iterations != 1):
-            try: common.bot.send_message(common.admin, text)
+            try: send.send_message(common.admin, text)
             except Exception as e: logger.ERROR(str(e))
         
         try:
@@ -31,15 +31,19 @@ def poll():
             
         iterations += 1
         if (iterations > maxiterations):
-            logger.WARN("Too many iterations, rebooting...")
-            program.reboot()
+            persistent.keep_trying_to_start_async()
+            return
+            # logger.WARN("Too many iterations, rebooting...")
+            # program.reboot()
         
         time.sleep(base_wait + inscrease_wait*(iterations-1))
 
+def start_polling():
+    common.KEEP_POLLING = True
+    poll()
 
 def start_polling_async():
-    common.KEEP_POLLING = True
-    task.ThreadTask(poll)()
+    task.ThreadTask(start_polling)()
     
 def stop_polling():
     if not common.bot: return

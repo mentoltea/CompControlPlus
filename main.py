@@ -21,12 +21,12 @@ else: starttext += " in foreground"
 starttext.replace('\n', '')
 logger.LOG(starttext)
 
-telegram.poller.start_polling_async()
+telegram.persistent.keep_trying_to_start_async()
+
 time.sleep(2)
 
 
-if telegram.common.bot:
-    telegram.common.bot.send_message(telegram.common.admin, starttext)
+telegram.send.send_message(telegram.common.admin, starttext)
 
 
 afterload = global_settings.MAIN_AFTERLOAD_SCRIPT
@@ -50,7 +50,7 @@ if afterload:
             except Exception as e:
                 logger.ERROR(str(e))
                 if (telegram.common.bot): 
-                    telegram.common.bot.send_message(telegram.common.admin, str(e))
+                    telegram.send.send_message(telegram.common.admin, str(e))
             
 
 text = ""

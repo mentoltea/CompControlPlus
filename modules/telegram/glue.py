@@ -1,4 +1,4 @@
-from . import common
+from . import common, send
 from modules import screen, logger
 from modules.commands import command
 from tasks import task
@@ -19,7 +19,7 @@ def evaluate_message(message: telebot.types.Message):
         reply = str(e)
     
     if not common.bot: return
-    common.bot.reply_to(message, reply)
+    send.reply_to(message, reply)
     
     
 def evaluate_message_async(message: telebot.types.Message):
@@ -29,6 +29,6 @@ def evaluate_message_async(message: telebot.types.Message):
 def send_screen(img: PIL.Image.Image):
     if not common.bot: return
     try:
-        common.bot.send_photo(common.admin, img)
+        send.send_photo(common.admin, img)
     except Exception as e:
         logger.ERROR(str(e))
