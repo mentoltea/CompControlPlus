@@ -6,10 +6,18 @@ import global_settings
 
 from tasks import task
 import time
+import sys
+
+in_background = False
+if 'pythonw' in sys.executable:
+    in_background = True
 
 logger.plain_text("\n\n")
 
 starttext = "CompControl+ started " + time.asctime()
+if in_background: starttext += " in background"
+else: starttext += " in foreground"
+
 starttext.replace('\n', '')
 logger.LOG(starttext)
 
@@ -20,8 +28,9 @@ time.sleep(2)
 if telegram.common.bot:
     telegram.common.bot.send_message(telegram.common.admin, starttext)
 
+
 afterload = global_settings.MAIN_AFTERLOAD_SCRIPT
-    
+
 if afterload:
     af_text = f"Loading afterload script {afterload}"
     logger.LOG(af_text)
@@ -44,8 +53,13 @@ if afterload:
                     telegram.common.bot.send_message(telegram.common.admin, str(e))
             
 
+text = ""
 while True:
-    text = input('> ')
+    if (in_background):
+        time.sleep(1)
+    else: 
+        text = input('> ')
+        
     if (text != ""):
         logger.INFO(f"Local message: {text}")
         if text[0] != '/' and text[0] != '!': text = '/' + text

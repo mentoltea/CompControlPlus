@@ -1,13 +1,14 @@
 from . import command
 from .command import Expression, CommandUsageError, NewCommand
 from core.functional import program
+import os
 
 @NewCommand(
     "/exit!", "Exites.", 
     "/exit!"
 )
 def Exit(*args, **kwargs) -> None:
-    exit(0)
+    os.abort()
     return
 
 
