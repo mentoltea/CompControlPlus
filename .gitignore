@@ -2,3 +2,4 @@
 .vscode
 __pycache__
 data
+!global_settings.py

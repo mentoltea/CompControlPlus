@@ -1,14 +1,9 @@
-from core.functional import ensure_dir_existance
+from core.functional.utility import ensure_dir_existance
 import time
 
 COMMON_DIR = "data/logs/"
-
-LOG_DIR = "log/"
-INFO_DIR = "info/"
-WARN_DIR = "warn/"
-ERROR_DIR = "error/"
-
 FORMAT = ".txt"
+BYDIRECT_LOGS_TO_STDOUT = False
 
 def format_filename(t: time.struct_time) -> str:
     return time.strftime("%B %Y", t)
@@ -16,55 +11,81 @@ def format_filename(t: time.struct_time) -> str:
 def format_line(t: time.struct_time, text: str) -> str:
     return time.strftime("Day %d %H:%M:%S: ", t) + text + "\n"
 
-def LOG(text: str):
-    ensure_dir_existance(COMMON_DIR + LOG_DIR)
+def plain_text(text: str):
+    ensure_dir_existance(COMMON_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
-    filepath = COMMON_DIR + LOG_DIR + filename + FORMAT
+    filepath = COMMON_DIR + filename + FORMAT
     
-    textline = format_line(current, text)
+    textline = text
     
     fd = open(filepath, mode="a", encoding="utf-8")
     fd.write(textline)
     fd.close()
+    
+    if (BYDIRECT_LOGS_TO_STDOUT): print(textline)
+
+def LOG(text: str):
+    ensure_dir_existance(COMMON_DIR)
+    current = time.gmtime()
+
+    filename = format_filename(current)
+    filepath = COMMON_DIR + filename + FORMAT
+    
+    textline = "LOG  : " + format_line(current, text)
+    
+    fd = open(filepath, mode="a", encoding="utf-8")
+    fd.write(textline)
+    fd.close()
+    
+    if (BYDIRECT_LOGS_TO_STDOUT): print(textline)
 
 def INFO(text: str):
-    ensure_dir_existance(COMMON_DIR + INFO_DIR)
+    ensure_dir_existance(COMMON_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
-    filepath = COMMON_DIR + INFO_DIR + filename + FORMAT
+    filepath = COMMON_DIR + filename + FORMAT
     
-    textline = format_line(current, text)
+    textline = "INFO : " + format_line(current, text)
     
     fd = open(filepath, mode="a", encoding="utf-8")
     fd.write(textline)
     fd.close()
+    
+    if (BYDIRECT_LOGS_TO_STDOUT): print(textline)
+
 
 def WARN(text: str):
-    ensure_dir_existance(COMMON_DIR + WARN_DIR)
+    ensure_dir_existance(COMMON_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
-    filepath = COMMON_DIR + WARN_DIR + filename + FORMAT
+    filepath = COMMON_DIR + filename + FORMAT
     
-    textline = format_line(current, text)
+    textline = "WARN : " + format_line(current, text)
     
     fd = open(filepath, mode="a", encoding="utf-8")
     fd.write(textline)
     fd.close()
+    
+    if (BYDIRECT_LOGS_TO_STDOUT): print(textline)
+
     
 def ERROR(text: str):
-    ensure_dir_existance(COMMON_DIR + ERROR_DIR)
+    ensure_dir_existance(COMMON_DIR)
     current = time.gmtime()
 
     filename = format_filename(current)
-    filepath = COMMON_DIR + ERROR_DIR + filename + FORMAT
+    filepath = COMMON_DIR + filename + FORMAT
     
-    textline = format_line(current, text)
+    textline = "ERROR: " + format_line(current, text)
     
     fd = open(filepath, mode="a", encoding="utf-8")
     fd.write(textline)
     fd.close()
+    
+    if (BYDIRECT_LOGS_TO_STDOUT): print(textline)
+
     

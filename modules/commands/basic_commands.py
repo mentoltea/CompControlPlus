@@ -137,4 +137,3 @@ def Floatify(*args, **kwargs) -> float:
     arg = args[0]
     res = float(arg)
     return res
-    
