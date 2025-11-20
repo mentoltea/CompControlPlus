@@ -1,4 +1,4 @@
-from . import common, glue
+from . import common, glue, send
 from modules import screen, logger
 from modules.commands import command
 from tasks import task
@@ -25,6 +25,7 @@ def ManageScreenPoll(*args, **kwargs):
         elif spec == 'm': tm *= 60
         else: raise command.CommandUsageError(f"Unexpected time specifier {spec}")
         screen.poller.start_polling_async(tm, glue.send_screen)
+        reply = command.NoReply()
         
     elif subcommand == "stop":
         screen.poller.stop_polling()
@@ -35,3 +36,16 @@ def ManageScreenPoll(*args, **kwargs):
     else: raise command.CommandUsageError(f"Cannot identify operation {subcommand}")
     
     return reply
+
+
+@command.NewCommand(
+    "screen", 
+    "Takes a screenshot", 
+    "/screen"
+)
+def TakeScreen(*args, **kwargs):
+    task.ChainedTask([
+        task.BasicTask(screen.screen.take_screenshot),
+        task.BasicTask(glue.send_screen),
+    ])()
+    return command.NoReply()

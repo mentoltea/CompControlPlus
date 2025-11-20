@@ -8,13 +8,16 @@ import PIL.Image
 def evaluate_message(message: telebot.types.Message):
     query = message.text
     reply = ""
+    result = None
     
     try:
         t = task.ChainedTask([
             task.BasicTask(command.parse_query_to_blocks, query),
             task.BasicTask(command.evaluate_blocks)
         ])()
-        reply = str( task.fetch_unnest(t).get() ) # type: ignore
+        result = task.fetch_unnest(t).get() # type: ignore
+        if (isinstance(result, command.NoReply)): return
+        reply = str( result ) # type: ignore
     except Exception as e:
         reply = str(e)
     

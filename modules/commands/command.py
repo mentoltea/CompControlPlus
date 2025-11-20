@@ -58,6 +58,14 @@ class CommandExpression(Expression):
     def getname(self) -> str | None:
         return None
 
+class NoReply(Expression):
+    def __init__(self):
+        pass
+    def get(self):
+        return None
+    def getname(self):
+        return None
+    
 class CommandUsageError(Exception):
     def __init__(self, message: str) -> None:
         self.message = message
