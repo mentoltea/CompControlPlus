@@ -15,7 +15,7 @@ def try_start_bot():
         
 def keep_trying_to_start():
     try:
-        while (common.bot == None):
+        while (common.bot == None and common.KEEP_POLLING == True):
             try_start_bot()
         poller.start_polling_async()
     except Exception as e:

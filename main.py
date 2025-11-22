@@ -1,25 +1,23 @@
 from core import state
 from modules import screen, logger
+import time
+import sys
+
+logger.plain_text("\n\n")
+in_background = False
+if 'pythonw' in sys.executable:
+    in_background = True
+starttext = "CompControl+ started " + time.asctime()
+if in_background: starttext += " in background"
+else: starttext += " in foreground"
+starttext.replace('\n', '')
+logger.LOG(starttext)
+
 from modules import telegram
 from modules.commands import command
 import global_settings
 
 from tasks import task
-import time
-import sys
-
-in_background = False
-if 'pythonw' in sys.executable:
-    in_background = True
-
-logger.plain_text("\n\n")
-
-starttext = "CompControl+ started " + time.asctime()
-if in_background: starttext += " in background"
-else: starttext += " in foreground"
-
-starttext.replace('\n', '')
-logger.LOG(starttext)
 
 telegram.persistent.keep_trying_to_start_async()
 
