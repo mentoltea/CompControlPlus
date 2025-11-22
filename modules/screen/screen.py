@@ -26,7 +26,7 @@ def take_pure_screenshot() -> PIL.Image.Image:
 
 
 def save_screenshot(img: PIL.Image.Image):
-    current = time.gmtime()
+    current = time.localtime()
     
     # this variant makes dates like "Y2025/M06/D12" instead of "Y2025/M6/D12"
     # dirpath = time.strftime("Y%Y/M%m/D%d/", current)

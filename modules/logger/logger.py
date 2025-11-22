@@ -13,7 +13,7 @@ def format_line(t: time.struct_time, text: str) -> str:
 
 def plain_text(text: str):
     ensure_dir_existance(COMMON_DIR)
-    current = time.gmtime()
+    current = time.localtime()
 
     filename = format_filename(current)
     filepath = COMMON_DIR + filename + FORMAT
@@ -28,7 +28,7 @@ def plain_text(text: str):
 
 def LOG(text: str):
     ensure_dir_existance(COMMON_DIR)
-    current = time.gmtime()
+    current = time.localtime()
 
     filename = format_filename(current)
     filepath = COMMON_DIR + filename + FORMAT
@@ -43,7 +43,7 @@ def LOG(text: str):
 
 def INFO(text: str):
     ensure_dir_existance(COMMON_DIR)
-    current = time.gmtime()
+    current = time.localtime()
 
     filename = format_filename(current)
     filepath = COMMON_DIR + filename + FORMAT
@@ -59,7 +59,7 @@ def INFO(text: str):
 
 def WARN(text: str):
     ensure_dir_existance(COMMON_DIR)
-    current = time.gmtime()
+    current = time.localtime()
 
     filename = format_filename(current)
     filepath = COMMON_DIR + filename + FORMAT
@@ -75,7 +75,7 @@ def WARN(text: str):
     
 def ERROR(text: str):
     ensure_dir_existance(COMMON_DIR)
-    current = time.gmtime()
+    current = time.localtime()
 
     filename = format_filename(current)
     filepath = COMMON_DIR + filename + FORMAT
